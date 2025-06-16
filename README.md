@@ -1,6 +1,4 @@
-
-
-Expense Tracker: A Personal Finance Management Web Application
+#Expense Tracker: A Personal Finance Management Web Application#
 Overview
 The Expense Tracker is a robust and intuitive web application designed to help users efficiently manage, categorize, and monitor their daily financial transactions. Developed as a full-stack solution using Spring Boot (Java), this project demonstrates a strong understanding of modern web development principles, secure backend architecture, and effective database management. It provides a practical platform for users to gain insight into their spending habits.
 
@@ -28,3 +26,4 @@ Version Control:
 Git & GitHub: For source code management, collaboration, and project versioning.
 Cloud Deployment (PaaS):
 Render.com: Platform-as-a-Service used for continuous deployment and hosting of the application.
+
