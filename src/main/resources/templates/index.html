@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker Pro - Master Your Money</title>
+  <link rel="icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    :root {
+        --primary-color: #007bff;
+        --secondary-color: #6c757d;
+        --dark-color: #212529;
+        --light-bg: #f0f4f8;
+        --medium-bg: #d9e2ec;
+        --text-color: #334e68;
+        --accent-color: #28a745; /* Success green */
+        --consistent-white-bg: rgba(255, 255, 255, 0.95); /* New variable for consistent background */
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: var(--light-bg);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        color: var(--text-color);
+        overflow-x: hidden; /* Prevent horizontal scroll from animations */
+    }
+    .navbar {
+        background-color: var(--consistent-white-bg); /* Using the new variable */
+        box-shadow: 0 2px 10px rgba(0,0,0,.05);
+        padding: 15px 0;
+    }
+    .navbar-brand {
+        font-weight: 700;
+        color: var(--dark-color) !important;
+        display: flex;
+        align-items: center;
+        font-size: 1.5rem; /* Increased font size for brand text */
+    }
+    .navbar-brand img {
+        margin-right: 10px;
+        /* Optional: Add background to logo itself if it has transparent parts and needs to stand out */
+        /* background-color: var(--consistent-white-bg); */
+        /* padding: 3px 6px; */
+        /* border-radius: 3px; */
+        /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); */
+    }
+    .hero-section {
+        position: relative;
+        height: 85vh; /* Take up more vertical space */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 50px 20px;
+        overflow: hidden;
+        background: linear-gradient(135deg, var(--primary-color) 0%, #6dd5ed 100%); /* Vibrant gradient */
+        color: #fff; /* White text for contrast */
+    }
+
+    /* Hero Background Animation - Subtle abstract shapes */
+    .hero-section::before,
+    .hero-section::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        animation: moveCircles 20s infinite ease-in-out alternate;
+    }
+    .hero-section::before {
+        width: 300px; height: 300px;
+        top: -50px; left: -50px;
+    }
+    .hero-section::after {
+        width: 400px; height: 400px;
+        bottom: -80px; right: -80px;
+        animation-delay: 2s;
+        animation-duration: 25s;
+    }
+    @keyframes moveCircles {
+        0% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(50px, -50px) scale(1.1); }
+        100% { transform: translate(0, 0) scale(1); }
+    }
+
+    .hero-content {
+        z-index: 10;
+        max-width: 900px;
+        animation: fadeInScale 1.2s ease-out forwards; /* Fade in and slightly scale */
+        background-color: rgba(0, 0, 0, 0.2); /* Slightly darker overlay for text */
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 15px 40px rgba(0,0,0,.2);
+    }
+    @keyframes fadeInScale {
+        from { opacity: 0; transform: translateY(30px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .hero-title {
+        font-size: 4rem; /* Larger for impact */
+        font-weight: 700;
+        margin-bottom: 25px;
+        line-height: 1.2;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }
+    .hero-subtitle {
+        font-size: 1.6rem;
+        font-weight: 300;
+        margin-bottom: 50px;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        opacity: 0.9;
+    }
+    .btn-cta {
+        padding: 18px 40px; /* Larger CTA buttons */
+        font-size: 1.3rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        margin: 0 15px;
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        text-transform: uppercase; /* Make them pop */
+        letter-spacing: 1px;
+    }
+    .btn-cta.primary {
+        background-color: var(--accent-color); /* Green for "Get Started" */
+        border-color: var(--accent-color);
+        color: #fff;
+    }
+    .btn-cta.primary:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+    }
+    .btn-cta.secondary {
+        background-color: transparent;
+        border: 2px solid #fff;
+        color: #fff;
+    }
+    .btn-cta.secondary:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+    }
+
+    /* Feature Section */
+    .features-section {
+        padding: 80px 0;
+        background-color: var(--consistent-white-bg); /* Using the new variable */
+        text-align: center;
+        box-shadow: inset 0 5px 15px rgba(0,0,0,.03);
+    }
+    .feature-item {
+        padding: 30px;
+        border-radius: 10px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 30px;
+    }
+    .feature-item:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,.08);
+    }
+    .feature-item i {
+        font-size: 3.5rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        transition: transform 0.3s ease;
+    }
+    .feature-item:hover i {
+        transform: scale(1.1);
+    }
+    .feature-item h3 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 15px;
+    }
+    .feature-item p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #52667b;
+    }
+
+    /* How It Works Step Cards */
+    .how-it-works-section {
+        background: var(--medium-bg);
+        padding-bottom: 80px;
+    }
+    .step-card {
+        background-color: var(--consistent-white-bg); /* Using the new variable */
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-align: left;
+        height: 100%; /* Make cards equal height in a row */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start; /* Align content to top without images */
+    }
+    .step-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+    .step-icon {
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        display: inline-block;
+    }
+    .step-card h3 {
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 15px;
+    }
+    .step-card p {
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: #52667b;
+    }
+
+    /* General Section Heading Styling */
+    .section-heading {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 60px;
+        color: var(--dark-color);
+        position: relative;
+    }
+    .section-heading::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 4px;
+        background-color: var(--primary-color);
+        margin: 20px auto 0;
+        border-radius: 2px;
+    }
+
+    .footer {
+        background-color: var(--dark-color);
+        color: var(--light-bg);
+        padding: 30px;
+        text-align: center;
+        font-size: 0.95rem;
+        margin-top: auto;
+    }
+    .footer a {
+        color: var(--medium-bg);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    .footer a:hover {
+        color: #fff;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+        .hero-title {
+            font-size: 3rem;
+        }
+        .hero-subtitle {
+            font-size: 1.4rem;
+        }
+        .btn-cta {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            margin: 10px 8px;
+        }
+        .feature-item {
+            margin-bottom: 30px; /* Spacing for stacked columns */
+        }
+    }
+    @media (max-width: 768px) {
+        .hero-section {
+            height: auto; /* Allow hero to shrink on smaller screens */
+            min-height: 75vh;
+        }
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        .hero-subtitle {
+            font-size: 1.2rem;
+        }
+        .btn-cta {
+            display: block; /* Stack buttons */
+            width: 80%;
+            max-width: 300px;
+            margin: 10px auto;
+        }
+        .section-heading {
+            font-size: 2.2rem;
+        }
+        .feature-item {
+            padding: 20px;
+        }
+    }
+    @media (max-width: 576px) {
+        .hero-content {
+            padding: 30px;
+        }
+        .hero-title {
+            font-size: 2rem;
+        }
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+        .section-heading {
+            font-size: 1.8rem;
+        }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img th:src="@{/images/logo.png}" alt="Tracker Logo" height="35" class="d-inline-block align-top">
+      Expense Tracker Pro
+    </a>
+    <div class="ml-auto">
+      <a th:href="@{/login}" class="btn btn-outline-primary mr-2">Login</a>
+      <a th:href="@{/register}" class="btn btn-primary">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero-section">
+  <div class="hero-content">
+    <h1 class="hero-title">
+      Master Your Money. <br> Live with Financial Confidence.
+    </h1>
+    <p class="hero-subtitle">
+      Take control of your financial journey with our intuitive and powerful expense tracker.
+      Budget smarter, save more, and achieve your goals.
+    </p>
+    <div class="d-flex justify-content-center flex-wrap">
+      <a href="#how-it-works" class="btn btn-cta primary">See How It Works <i class="fas fa-arrow-down ml-2"></i></a>
+    </div>
+  </div>
+</section>
+
+<section class="features-section" id="features-section">
+  <div class="container">
+    <h2 class="section-heading">Powerful Features, Simple Usage</h2>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class="feature-item">
+          <i class="fas fa-chart-pie"></i>
+          <h3>Intuitive Tracking</h3>
+          <p>Easily log your daily expenses in seconds. Our streamlined interface makes tracking a breeze, so you always know where your money goes.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-item">
+          <i class="fas fa-tags"></i>
+          <h3>Smart Categorization</h3>
+          <p>Organize your spending with custom categories. Understand your habits better and identify areas for saving without the hassle.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-item">
+          <i class="fas fa-lightbulb"></i>
+          <h3>Financial Insights</h3>
+          <p>Gain valuable insights with monthly spending summaries and visual reports. Make informed decisions and achieve your financial goals faster.</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="feature-item">
+          <i class="fas fa-mobile-alt"></i>
+          <h3>Anywhere Access</h3>
+          <p>Access your finances from any device, anywhere. Your data is secure and always available when you need it.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-item">
+          <i class="fas fa-lock"></i>
+          <h3>Secure & Private</h3>
+          <p>Your financial data is protected with top-tier security measures. We prioritize your privacy and peace of mind.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-item">
+          <i class="fas fa-hand-holding-usd"></i>
+          <h3>Budgeting Made Easy</h3>
+          <p>Set and manage budgets for different categories. Stay on track and avoid overspending with real-time feedback.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how-it-works-section" id="how-it-works">
+  <div class="container">
+    <h2 class="section-heading">See How Expense Tracker Pro Works</h2>
+    <p class="lead mb-5">Follow these simple steps to start mastering your finances:</p>
+
+    <div class="row text-left">
+      <div class="col-md-6 mb-4 d-flex align-items-stretch">
+        <div class="step-card">
+          <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+          <div>
+            <h3>1. Create Your Account</h3>
+            <p>Sign up in minutes with just a few details. Your financial journey begins here!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-4 d-flex align-items-stretch">
+        <div class="step-card">
+          <div class="step-icon"><i class="fas fa-plus-circle"></i></div>
+          <div>
+            <h3>2. Add Your Expenses</h3>
+            <p>Easily log your daily spending. Categorize transactions to keep everything organized.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-4 d-flex align-items-stretch">
+        <div class="step-card">
+          <div class="step-icon"><i class="fas fa-chart-line"></i></div>
+          <div>
+            <h3>3. View Monthly Summary</h3>
+            <p>See a clear overview of your spending each month. Understand where your money goes.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-4 d-flex align-items-stretch">
+        <div class="step-card">
+          <div class="step-icon"><i class="fas fa-bullseye"></i></div>
+          <div>
+            <h3>4. Gain Insights & Budget</h3>
+            <p>Leverage visual reports to make smarter financial decisions and stay within your budget.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="text-center py-5 bg-white">
+  <div class="container">
+    <h2 class="section-heading" style="margin-bottom: 30px;">Ready to Get Started?</h2>
+    <p class="lead mb-5">Join thousands of users who are taking control of their finances today!</p>
+    <a th:href="@{/register}" class="btn btn-cta primary">Sign Up Now!</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    © <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2023</span> Expense Tracker Pro. All rights reserved.
+    <p class="mt-2"><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

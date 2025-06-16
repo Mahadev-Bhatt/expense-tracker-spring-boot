@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Expense Tracker Pro</title>
+  <link rel="icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    :root {
+        --primary-color: #007bff;
+        --secondary-color: #6c757d;
+        --dark-color: #212529;
+        --light-bg: #f0f4f8;
+        --medium-bg: #d9e2ec;
+        --text-color: #334e68;
+        --accent-color: #28a745; /* Success green */
+        --consistent-white-bg: rgba(255, 255, 255, 0.95);
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, var(--primary-color) 0%, #6dd5ed 100%); /* Hero-like background */
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-color);
+        overflow: hidden; /* For subtle background animations */
+    }
+
+    /* Subtle background animation */
+    body::before {
+        content: '';
+        position: absolute;
+        top: -10%; left: -10%;
+        width: 120%; height: 120%;
+        background: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
+        animation: rotateBg 30s linear infinite;
+        z-index: -1;
+    }
+    @keyframes rotateBg {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .login-container {
+        background-color: var(--consistent-white-bg);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        max-width: 450px;
+        width: 90%;
+        animation: fadeInScale 0.8s ease-out forwards;
+    }
+    @keyframes fadeInScale {
+        from { opacity: 0; transform: translateY(30px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .login-header {
+        margin-bottom: 30px;
+    }
+    .login-header h2 {
+        font-weight: 700;
+        color: var(--dark-color);
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+    .login-header p {
+        color: var(--secondary-color);
+        font-size: 1.1rem;
+    }
+    .login-logo {
+        height: 60px;
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 12px 15px;
+        border: 1px solid var(--medium-bg);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+    .form-group label {
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 8px;
+    }
+
+    .btn-login {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        color: #fff;
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 20px;
+    }
+    .btn-login:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    .forgot-password, .signup-link {
+        display: block;
+        margin-top: 15px;
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: color 0.3s ease;
+        font-size: 0.95rem;
+    }
+    .forgot-password:hover, .signup-link:hover {
+        color: var(--dark-color);
+    }
+
+    /* Error Message Styling */
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        border-radius: 8px;
+        padding: 10px 15px;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+        animation: shake 0.5s;
+    }
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-5px); }
+        40%, 80% { transform: translateX(5px); }
+    }
+  </style>
+</head>
+<body>
+<div class="login-container">
+  <div class="login-header">
+    <img th:src="@{/images/logo.png}" alt="Expense Tracker Pro Logo" class="login-logo">
+    <h2>Welcome Back!</h2>
+    <p>Log in to manage your finances.</p>
+  </div>
+
+  <div th:if="${param.error}" class="alert alert-danger" role="alert">
+    Invalid username or password.
+  </div>
+  <div th:if="${param.logout}" class="alert alert-success" role="alert">
+    You have been logged out successfully.
+  </div>
+
+  <form th:action="@{/login}" method="post">
+    <div class="form-group">
+      <label for="username">Username or Email</label>
+      <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username or email" required autofocus>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+    </div>
+    <button type="submit" class="btn btn-login">Login</button>
+  </form>
+
+<!--  <a th:href="@{/forgot-password}" class="forgot-password">Forgot Password?</a>-->
+  <a th:href="@{/register}" class="signup-link">Don't have an account? Sign Up</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

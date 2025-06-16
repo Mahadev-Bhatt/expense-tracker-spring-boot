@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add New Expense</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --primary-blue-dark: #0056b3;
+            --text-dark: #343a40;
+            --text-light: #6c757d;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --border-light: #dee2e6;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --shadow-strong: rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            padding: 2rem 1rem;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full viewport height */
+        }
+
+        .container {
+            max-width: 600px; /* Smaller max-width for forms */
+            background: var(--bg-white);
+            border-radius: 12px;
+            box-shadow: 0 10px 35px var(--shadow-strong);
+            padding: 2.5rem;
+            width: 100%; /* Ensure it takes full width on small screens */
+        }
+
+        h2 {
+            color: var(--text-dark);
+            font-weight: 700;
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+            margin-bottom: 2rem; /* Increased margin for form title */
+            text-align: center; /* Center the title */
+        }
+
+        h2:after {
+            content: '';
+            position: absolute;
+            left: 50%; /* Center the underline */
+            transform: translateX(-50%); /* Adjust for centering */
+            bottom: 0;
+            width: 70px;
+            height: 5px;
+            background: var(--primary-blue);
+            border-radius: 3px;
+        }
+
+        /* Form Group Styling */
+        .form-group {
+            margin-bottom: 1.5rem; /* Space between form fields */
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="date"] {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-dark);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        /* Button Styling */
+        .btn-group {
+            display: flex;
+            justify-content: flex-end; /* Align buttons to the right */
+            gap: 1rem; /* Space between buttons */
+            margin-top: 2rem; /* Space above buttons */
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none; /* For links acting as buttons */
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-flex; /* For icon alignment if needed */
+            align-items: center;
+            gap: 0.5rem;
+            border: none; /* Remove default button border */
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px var(--shadow-light);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px var(--shadow-light);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            .container {
+                padding: 1.5rem;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            h2 {
+                font-size: 1.8rem;
+                text-align: left; /* Align title to left on small screens */
+            }
+            h2:after {
+                left: 0; /* Align underline to left on small screens */
+                transform: translateX(0);
+            }
+            .btn-group {
+                flex-direction: column; /* Stack buttons vertically on small screens */
+                gap: 0.8rem;
+            }
+            .btn {
+                width: 100%; /* Full width buttons */
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Add New Expense</h2>
+
+    <form th:action="@{/expenses/add}" th:object="${expense}" method="post">
+        <div class="form-group">
+            <label for="name">Expense Name</label>
+            <input type="text" id="name" th:field="*{name}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" th:field="*{amount}" min="0" step="0.01" required>
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category</label>
+            <input type="text" id="category" th:field="*{category}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" th:field="*{date}" required>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Add Expense
+            </button>
+            <a th:href="@{/}" class="btn btn-secondary">
+                <i class="fas fa-times-circle"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
